@@ -50,7 +50,7 @@ def product[A, B](fa: F[A], fb: F[B]): F[(A, B)] = map2(fa, fb)((_, _))
 
 As well as the Kleisli composition:
 ```
-def compose[A, B, C](f: A => F[B], g: B => F[C]): A => F[C] = a => flatMap(f(a), g)
+def compose[A, B, C](f: A => F[B], g: B => F[C]): A => F[C] = a => flatMap(f(a))(g)
 ``` 
 
 This latter allows an alternative expression of the monad laws:
