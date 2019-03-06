@@ -37,6 +37,8 @@ def traverse[A, B](as: List[A])(f: A => F[B]): F[List[B]] =
 def sequence[A](fas: List[F[A]]): F[List[A]] =
   traverse[F[A], A](fas)(identity)
 ```
+(Note that traverse's definition above applies f to the elements of the original list `as` right-to-left. Alternative, 
+more complex definitions might apply f to the elements of `as` left-to-right. Cats is an example of such definition.)
 
 `replicateM` and `product` can also be derived for a Monad:
 ```
