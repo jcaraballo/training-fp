@@ -1,7 +1,12 @@
 # training-fp
 
-Training material in Scala on functors, monads and applicative functors.
+Training material in Scala on semigroups, functors, monads and applicative functors.
 
+## Semigroups
+Semigroups define the `combine` operation.
+
+They satisfy the law:
+* Associativity: `(a combine b) combine c == a combine (b combine c)`.
 
 ## Functors
 Functors define the `map` operation.

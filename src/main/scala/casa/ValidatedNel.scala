@@ -15,3 +15,7 @@ case class Nel[A](head: A, tail: List[A] = Nil) {
   def ::(a: A): Nel[A] = Nel(a, head :: tail)
   def :::(other: Nel[A]): Nel[A] = Nel(other.head, other.tail ::: (head :: tail))
 }
+
+object Nel {
+  def apply[A](head: A, rest: A*): Nel[A] = Nel(head, rest.toList)
+}
