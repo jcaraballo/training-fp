@@ -8,6 +8,16 @@ Semigroups define the `combine` operation.
 They satisfy the law:
 * Associativity: `(a combine b) combine c == a combine (b combine c)`.
 
+## Monoids
+Monoids are semigroups that (besides `combine`) define the empty operation
+```$scala
+def empty[A]: A
+```
+
+They satisfy the laws:
+* Associativity (inherited from Semigroup): `(a combine b) combine c == a combine (b combine c)`.
+* Identity: `a combine empty == empty combine a == a`.
+
 ## Functors
 Functors define the `map` operation.
 
