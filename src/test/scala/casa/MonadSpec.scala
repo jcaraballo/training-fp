@@ -1,44 +1,12 @@
 package casa
 
-import org.scalacheck.Arbitrary
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers.convertToAnyShouldWrapper
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import scala.language.higherKinds
 
-class MonadSpec extends FreeSpec with MonadLaws with FunctorLaws with GeneratorDrivenPropertyChecks {
-  private def monadSatisfiesFunctorLaws[F[_], A, B, C](implicit monad: Monad[F],
-                                                       arbFA: Arbitrary[F[A]],
-                                                       arbAtoB: Arbitrary[A => B],
-                                                       arbBtoC: Arbitrary[B => C]
-                                                      ): Unit = {
-    functorSatisfiesIdentityLaw[F, A]
-    functorSatisfiesCompositionLaw[F, A, B, C]
-  }
-
-  private def monadSatisfiesMonadLaws[F[_], A, B, C](implicit monad: Monad[F],
-                                                     arbA: Arbitrary[A],
-                                                     arbFA: Arbitrary[F[A]],
-                                                     arbAtoFB: Arbitrary[A => F[B]],
-                                                     arbBtoFC: Arbitrary[B => F[C]]
-                                                    ): Unit = {
-    monadSatisfiesLeftIdentityLaw[F, A, B]
-    monadSatisfiesRightIdentityLaw[F, A]
-    monadSatisfiesAssociativityLaw[F, A, B, C]
-  }
-
-  private def monadSatisfiesMonadLawsWithKleisliComposition[F[_], A, B, C, D](implicit monad: Monad[F],
-                                                     arbA: Arbitrary[A],
-                                                     arbAtoFB: Arbitrary[A => F[B]],
-                                                     arbBtoFC: Arbitrary[B => F[C]],
-                                                     arbCtoFD: Arbitrary[C => F[D]]
-                                                    ): Unit = {
-    monadSatisfiesLeftIdentityLawWithKleisliComposition[F, A, B]
-    monadSatisfiesRightIdentityLawWithKleisliComposition[F, A, B]
-    monadSatisfiesAssociativityLawWithKleisliComposition[F, A, B, C, D]
-  }
-
+class MonadSpec extends FreeSpec with MonadLaws with GeneratorDrivenPropertyChecks {
   private def asPair[A, B]: (A, B) => (A, B) = (_, _)
 
   private val toMaybeInt: String => Option[Int] = s => try {
@@ -114,55 +82,18 @@ class MonadSpec extends FreeSpec with MonadLaws with FunctorLaws with GeneratorD
       }
 
       "laws" - {
-        "functor laws: identity and composition" in {
-          monadSatisfiesFunctorLaws[List, Int, Int, Int]
-          monadSatisfiesFunctorLaws[List, Int, String, Boolean]
-          monadSatisfiesFunctorLaws[List, Double, String, Int]
-          monadSatisfiesFunctorLaws[List, Double, Double, Double]
+        "monad laws" in {
+          monadSatisfiesLaws[List, Int, Int, Int]
+          monadSatisfiesLaws[List, Int, String, Boolean]
+          monadSatisfiesLaws[List, Double, String, Int]
+          monadSatisfiesLaws[List, Double, Double, Double]
         }
 
-        "left identity" in {
-          monadSatisfiesLeftIdentityLaw[List, Int, Int]
-          monadSatisfiesLeftIdentityLaw[List, Int, String]
-          monadSatisfiesLeftIdentityLaw[List, Boolean, Double]
-          monadSatisfiesLeftIdentityLaw[List, Double, Double]
-        }
-
-        "right identity" in {
-          monadSatisfiesRightIdentityLaw[List, Int]
-          monadSatisfiesRightIdentityLaw[List, String]
-          monadSatisfiesRightIdentityLaw[List, Boolean]
-          monadSatisfiesRightIdentityLaw[List, Double]
-        }
-
-        "associativity" in {
-          monadSatisfiesAssociativityLaw[List, Int, Int, Int]
-          monadSatisfiesAssociativityLaw[List, Int, String, Boolean]
-          monadSatisfiesAssociativityLaw[List, String, Boolean, Double]
-          monadSatisfiesAssociativityLaw[List, Double, Double, Double]
-        }
-
-        "expressed with Kleisli composition" - {
-          "left identity" in {
-            monadSatisfiesLeftIdentityLawWithKleisliComposition[List, Int, Int]
-            monadSatisfiesLeftIdentityLawWithKleisliComposition[List, Int, String]
-            monadSatisfiesLeftIdentityLawWithKleisliComposition[List, String, Double]
-            monadSatisfiesLeftIdentityLawWithKleisliComposition[List, Double, Double]
-          }
-
-          "right identity" in {
-            monadSatisfiesRightIdentityLawWithKleisliComposition[List, Int, Int]
-            monadSatisfiesRightIdentityLawWithKleisliComposition[List, Int, String]
-            monadSatisfiesRightIdentityLawWithKleisliComposition[List, String, Double]
-            monadSatisfiesRightIdentityLawWithKleisliComposition[List, Double, Double]
-          }
-
-          "associativity" in {
-            monadSatisfiesAssociativityLawWithKleisliComposition[List, Int, Int, Int, Int]
-            monadSatisfiesAssociativityLawWithKleisliComposition[List, Int, String, Boolean, Double]
-            monadSatisfiesAssociativityLawWithKleisliComposition[List, Int, Double, String, Boolean]
-            monadSatisfiesAssociativityLawWithKleisliComposition[List, Double, Double, Double, Double]
-          }
+        "monad laws expressed with Kleisli composition" in {
+          monadSatisfiesLawsWithKleisliComposition[List, Int, Int, Int, Int]
+          monadSatisfiesLawsWithKleisliComposition[List, Int, String, Boolean, Double]
+          monadSatisfiesLawsWithKleisliComposition[List, Int, Double, String, Boolean]
+          monadSatisfiesLawsWithKleisliComposition[List, Double, Double, Double, Double]
         }
       }
     }
@@ -218,9 +149,8 @@ class MonadSpec extends FreeSpec with MonadLaws with FunctorLaws with GeneratorD
       }
 
       "laws" in {
-        monadSatisfiesFunctorLaws[Option, Int, Double, String]
-        monadSatisfiesMonadLaws[Option, Int, Double, String]
-        monadSatisfiesMonadLawsWithKleisliComposition[Option, Int, Double, String, Boolean]
+        monadSatisfiesLaws[Option, Int, Double, String]
+        monadSatisfiesLawsWithKleisliComposition[Option, Int, Double, String, Boolean]
       }
     }
 
@@ -284,9 +214,9 @@ class MonadSpec extends FreeSpec with MonadLaws with FunctorLaws with GeneratorD
 
       "laws" in {
         type StringEither[B] = Either[String, B]
-        monadSatisfiesFunctorLaws[StringEither, Int, Double, String]
-        monadSatisfiesMonadLaws[StringEither, Int, Double, String]
-        monadSatisfiesMonadLawsWithKleisliComposition[StringEither, Int, Double, String, Boolean]
+        // eitherMonad is in scope but IntelliJ gets confused because it returns type lambda
+        monadSatisfiesLaws[StringEither, Int, Double, String]
+        monadSatisfiesLawsWithKleisliComposition[StringEither, Int, Double, String, Boolean]
       }
     }
 
