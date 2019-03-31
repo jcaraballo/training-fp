@@ -4,7 +4,7 @@ name := "prfunct"
 
 version := "0.1"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
 //resolvers += Resolver.sonatypeRepo("releases")
 //resolvers += Resolver.sonatypeRepo("snapshots")
