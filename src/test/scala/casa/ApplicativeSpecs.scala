@@ -3,132 +3,21 @@ package casa
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers.convertToAnyShouldWrapper
 import ApplicativeBaseSpec.{ApplicativeLike, StringValidatedNel}
-import org.scalacheck.{Arbitrary, Gen}
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import scala.language.higherKinds
 
 class ApplicativeSpec extends ApplicativeBaseSpec(ApplicativeProxy)
 class Applicative2Spec extends ApplicativeBaseSpec(Applicative2Proxy)
 
-abstract class ApplicativeBaseSpec(va: ApplicativeLike[StringValidatedNel]) extends FreeSpec with GeneratorDrivenPropertyChecks {
-
-  protected def validatedNelApplicativeHasPure[A](implicit arbA: Arbitrary[A]): Unit =
-    forAll { a: A =>
-      import ValidatedNel.ValidatedNelOps
-      va.pure(a) shouldBe a.validNel
-    }
-
-  protected def validatedNelApplicativeHasMap2[A, B, C](implicit
-                                                        arbA: Arbitrary[A],
-                                                        arbB: Arbitrary[B],
-                                                        arbC: Arbitrary[C],
-                                                        arbAandBtoC: Arbitrary[(A, B) => C]
-                                                       ): Unit = {
-    import ValidatedNel.ValidatedNelOps
-
-    forAll { (a: A, b: B, op: (A, B) => C) =>
-      va.map2(a.validNel, b.validNel)(op) shouldBe op(a, b).validNel
-    }
-
-    forAll { (err: String, b: B, op: (A, B) => C) =>
-      va.map2(err.invalidNel[A], b.validNel[String])(op) shouldBe err.invalidNel
-    }
-
-    forAll { (a: A, err: String, op: (A, B) => C) =>
-      va.map2(a.validNel[String], err.invalidNel)(op) shouldBe err.invalidNel
-    }
-
-    forAll { (err1: String, err2: String, op: (A, B) => C) =>
-      // Note how we get both errors
-      va.map2(err1.invalidNel, err2.invalidNel)(op) shouldBe Invalid(err1 :: Nel(err2))
-    }
-  }
-
-  protected def validatedNelApplicativeHasMap[A, B](implicit
-                                                        arbA: Arbitrary[A],
-                                                        arbAtoB: Arbitrary[A => B]
-                                                       ): Unit = {
-    import ValidatedNel.ValidatedNelOps
-
-    forAll { (a: A, op: A => B) =>
-      va.map(a.validNel)(op) shouldBe op(a).validNel
-    }
-
-    forAll { (err: String, op: A => B) =>
-      va.map(err.invalidNel[A])(op) shouldBe err.invalidNel
-    }
-  }
-
-  implicit def arbitraryValid[A](implicit arbA: Arbitrary[A]): Arbitrary[Valid[String, A]] =
-    Arbitrary(arbitrary[A].map(Valid.apply))
-
-  implicit def arbitraryValidated[A](implicit arbA: Arbitrary[A]): Arbitrary[ValidatedNel[String, A]] = {
-    import ValidatedNel.ValidatedNelOps
-    Arbitrary(Gen.oneOf(
-      arbitrary[String].map(_.invalidNel[A]),
-      arbitrary[A].map(_.validNel[String])
-    ))
-  }
-
-  protected def validatedNelApplicativeHasTraverse[A, B](implicit
-                                                         arbListOfA: Arbitrary[List[A]],
-                                                         arbAtoB: Arbitrary[A => B],
-                                                         arbAtoValidatedNelStringB: Arbitrary[A => ValidatedNel[String, B]],
-                                                         arbAtoValidStringB: Arbitrary[A => Valid[String, B]]
-                                                        ): Unit = {
-    import ValidatedNel.ValidatedNelOps
-
-    forAll{ aToValidatedNelStringB: (A => ValidatedNel[String, B]) =>
-      va.traverse(List.empty[A])(aToValidatedNelStringB) shouldBe List.empty[B].validNel[String]
-    }
-
-    forAll { (as: List[A], aToValidStringB: A => Valid[String, B]) =>
-      va.traverse(as)(aToValidStringB) shouldBe as.map(aToValidStringB).map(_.v).validNel[String]
-    }
-
-    forAll { (as: List[A], aToValidatedNelStringB: A => ValidatedNel[String, B]) =>
-      val bs: List[ValidatedNel[String, B]] = as.map(aToValidatedNelStringB)
-
-      whenever(bs.exists(_.isInstanceOf[Invalid[String, B]])) {
-        va.traverse(as)(aToValidatedNelStringB) shouldBe Invalid[String, List[B]](bs.collect { case Invalid(nel) => nel }.reduce[Nel[String]](_ ::: _))
-      }
-    }
-  }
+abstract class ApplicativeBaseSpec(va: ApplicativeLike[StringValidatedNel]) extends FreeSpec {
 
   "Applicative Functor" - {
     "ValidatedNel is an Applicative Functor" - {
       import ValidatedNel.ValidatedNelOps
 
       "operations" - {
-        "primitives" - {
-          "pure" in {
-            validatedNelApplicativeHasPure[String]
-            validatedNelApplicativeHasPure[Boolean]
-            validatedNelApplicativeHasPure[Int]
-            validatedNelApplicativeHasPure[Double]
-          }
-
-          "map2" in {
-            validatedNelApplicativeHasMap2[Int, Int, Int]
-            validatedNelApplicativeHasMap2[String, Int, Boolean]
-            validatedNelApplicativeHasMap2[Double, Double, Double]
-          }
-        }
 
         "derived" - {
-          "map" in {
-            validatedNelApplicativeHasMap[Int, Int]
-            validatedNelApplicativeHasMap[Double, String]
-            validatedNelApplicativeHasMap[Int, Boolean]
-          }
-
-          "traverse" in {
-            validatedNelApplicativeHasTraverse[String, Int]
-            validatedNelApplicativeHasTraverse[Double, Int]
-            validatedNelApplicativeHasTraverse[Boolean, Boolean]
-          }
 
           "sequence" in {
             va.sequence(List(1.validNel[String], 2.validNel[String])) shouldBe List(1, 2).validNel
