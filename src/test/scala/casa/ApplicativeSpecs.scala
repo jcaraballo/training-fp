@@ -1,7 +1,7 @@
 package casa
 
-import org.scalatest.FreeSpec
-import org.scalatest.Matchers.convertToAnyShouldWrapper
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import ApplicativeBaseSpec.{ApplicativeLike, StringValidatedNel}
 
 import scala.language.higherKinds
@@ -9,7 +9,7 @@ import scala.language.higherKinds
 class ApplicativeSpec extends ApplicativeBaseSpec(ApplicativeProxy)
 class Applicative2Spec extends ApplicativeBaseSpec(Applicative2Proxy)
 
-abstract class ApplicativeBaseSpec(va: ApplicativeLike[StringValidatedNel]) extends FreeSpec {
+abstract class ApplicativeBaseSpec(va: ApplicativeLike[StringValidatedNel]) extends AnyFreeSpec {
 
   "Applicative Functor" - {
     "ValidatedNel is an Applicative Functor" - {

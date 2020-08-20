@@ -1,9 +1,9 @@
 package casa
 
-import org.scalatest.FreeSpec
-import org.scalatest.Matchers.convertToAnyShouldWrapper
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
-class SemigroupSpec extends FreeSpec {
+class SemigroupSpec extends AnyFreeSpec {
   "Semigroup" - {
     "Nel is a semigroup" - {
       import Semigroup.Instances.{nonEmptyListConcatenationSemigroup => nelSemigroup}

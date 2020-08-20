@@ -1,9 +1,9 @@
 package casa
 
-import org.scalatest.FreeSpec
-import org.scalatest.Matchers.convertToAnyShouldWrapper
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
-class StateSpec extends FreeSpec {
+class StateSpec extends AnyFreeSpec {
   "State" - {
     "primitives" - {
       "pure" in {

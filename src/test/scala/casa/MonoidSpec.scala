@@ -1,9 +1,9 @@
 package casa
 
-import org.scalatest.FreeSpec
-import org.scalatest.Matchers.convertToAnyShouldWrapper
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
-class MonoidSpec extends FreeSpec {
+class MonoidSpec extends AnyFreeSpec {
   "Monoid" - {
     "Int addition is a monoid" - {
       import Monoid.Instances.intAdditionMonoid
