@@ -52,7 +52,7 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
 
 
   protected def validatedNelApplicativeHasPure[A](implicit arbA: Arbitrary[A]): Prop =
-    forAll { a: A =>
+    forAll { (a: A) =>
       import ValidatedNel.ValidatedNelOps
       va.pure(a) == a.validNel
     }
@@ -119,8 +119,7 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
     import ValidatedNel.ValidatedNelOps
 
     def traverseOfEmptyIsAValidEmpty: Prop =
-      forAll { //noinspection ScalaUnnecessaryParentheses
-        aToValidatedNelStringB: (A => ValidatedNel[String, B]) =>
+      forAll { (aToValidatedNelStringB: A => ValidatedNel[String, B]) =>
         va.traverse(List.empty[A])(aToValidatedNelStringB) == List.empty[B].validNel[String]
       }
 

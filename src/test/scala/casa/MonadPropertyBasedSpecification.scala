@@ -89,7 +89,7 @@ object MonadPropertyBasedSpecification extends Properties("Monad") {
     }
 
   private def monadRightIdentityLaw[F[_], A](implicit monad: Monad[F], arbFA: Arbitrary[F[A]]): Prop =
-    forAll { fa: F[A] =>
+    forAll { (fa: F[A]) =>
       monad.flatMap(fa)(monad.pure) == fa
     }
 

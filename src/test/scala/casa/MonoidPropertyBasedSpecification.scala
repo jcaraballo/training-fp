@@ -27,7 +27,7 @@ object MonoidPropertyBasedSpecification extends Properties("Monoid") {
   }
 
   def monoidIdentityLaw[A](implicit monoid: Monoid[A], arb: Arbitrary[A]): Prop = {
-    forAll { a: A =>
+    forAll { (a: A) =>
       monoid.combine(a, monoid.empty) == a &&
       monoid.combine(monoid.empty, a) == a
     }

@@ -26,7 +26,7 @@ object FunctorPropertyBasedSpecification extends Properties("Functor") {
   }
 
   private def functorIdentityLaw[F[_], A](implicit functor: Functor[F], arb: Arbitrary[F[A]]): Prop =
-    forAll { fa: F[A] =>
+    forAll { (fa: F[A]) =>
       functor.map(fa)(identity) == fa
     }
 
