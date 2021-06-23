@@ -34,7 +34,7 @@ Satisfy the laws:
 * Right identity: `m flatMap pure == m`
 * Associativity: `m.flatMap(f).flatMap.(g) == m.flatMap(a => f(a).flatMap(g))`
 
-Monads are Functors by defining `map` based on `flatMap` and `pure`. Therefore they also satisfy both functor laws:
+Monads are Functors by defining `map` based on `flatMap` and `pure`. Therefore, they also satisfy both functor laws:
 * Identity: `m map identity == m`
 * Composition: `m map (g(f(_))) == m map f map g`
 
