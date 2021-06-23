@@ -1,4 +1,4 @@
-name := "prfunct"
+name := "training-fp"
 
 version := "0.1"
 
