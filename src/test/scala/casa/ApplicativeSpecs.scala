@@ -1,7 +1,7 @@
 package casa
 
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.shouldBe
 import ApplicativeBaseSpec.{ApplicativeLike, StringValidatedNel}
 
 class ApplicativeSpec extends ApplicativeBaseSpec(ApplicativeProxy)

@@ -1,7 +1,7 @@
 package casa
 
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.shouldBe
 
 class MonadSpec extends AnyFreeSpec {
   private def asPair[A, B]: (A, B) => (A, B) = (_, _)
