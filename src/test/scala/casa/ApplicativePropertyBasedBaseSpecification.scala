@@ -52,7 +52,7 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
   protected def validatedNelApplicativeHasPure[A](implicit arbA: Arbitrary[A]): Prop =
     forAll { (a: A) =>
       import ValidatedNel.ValidatedNelOps
-      va.pure(a) == a.validNel
+      va.pure(a) == a.validNel[String]
     }
 
   protected def validatedNelApplicativeHasMap2[A, B, C](implicit
@@ -65,23 +65,23 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
 
     def map2AppliesOperationToElementsWhenTheyAreBothValid: Prop =
       forAll { (a: A, b: B, op: (A, B) => C) =>
-        va.map2(a.validNel, b.validNel)(op) == op(a, b).validNel
+        va.map2(a.validNel, b.validNel)(op) == op(a, b).validNel[String]
       }
 
     def map2ReturnsFirstElementWhenInvalidButSecondIsValid: Prop =
       forAll { (err: String, b: B, op: (A, B) => C) =>
-        va.map2(err.invalidNel[A], b.validNel[String])(op) == err.invalidNel
+        va.map2(err.invalidNel[A], b.validNel[String])(op) == err.invalidNel[C]
       }
 
     def map2ReturnsSecondElementWhenInvalidButFirstIsValid: Prop =
       forAll { (a: A, err: String, op: (A, B) => C) =>
-        va.map2(a.validNel[String], err.invalidNel)(op) == err.invalidNel
+        va.map2(a.validNel[String], err.invalidNel)(op) == err.invalidNel[C]
       }
 
     def map2ReturnsInvalidCombiningBothErrorsWhenBothAreInvalid: Prop =
       forAll { (err1: String, err2: String, op: (A, B) => C) =>
         // Note how we get both errors
-        va.map2(err1.invalidNel, err2.invalidNel)(op) == Invalid(err1 :: Nel(err2))
+        va.map2(err1.invalidNel, err2.invalidNel)(op) == Invalid[String, C](err1 :: Nel(err2))
       }
 
     map2AppliesOperationToElementsWhenTheyAreBothValid &&
@@ -97,12 +97,12 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
     import ValidatedNel.ValidatedNelOps
 
     def mapAppliesOperationWhenValid = forAll { (a: A, op: A => B) =>
-      va.map(a.validNel)(op) == op(a).validNel
+      va.map(a.validNel)(op) == op(a).validNel[String]
     }
 
     def mapReturnsInputWhenInvalid =
       forAll { (err: String, op: A => B) =>
-        va.map(err.invalidNel[A])(op) == err.invalidNel
+        va.map(err.invalidNel[A])(op) == err.invalidNel[B]
       }
 
     mapAppliesOperationWhenValid && mapReturnsInputWhenInvalid
