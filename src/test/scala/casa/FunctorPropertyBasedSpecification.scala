@@ -3,8 +3,6 @@ package casa
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{Arbitrary, Prop, Properties}
 
-import scala.language.higherKinds
-
 object FunctorPropertyBasedSpecification extends Properties("Functor") {
 
   property("List is a Functor") = {
@@ -14,7 +12,6 @@ object FunctorPropertyBasedSpecification extends Properties("Functor") {
       functorLaws[List, Int, String, Boolean] &&
       functorLaws[List, Double, String, Int] &&
       functorLaws[List, Double, Double, Double]
-
   }
 
   def functorLaws[F[_], A, B, C](implicit functor: Functor[F],

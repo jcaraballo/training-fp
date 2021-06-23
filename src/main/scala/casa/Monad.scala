@@ -1,7 +1,5 @@
 package casa
 
-import scala.language.higherKinds
-
 trait Monad[F[_]] extends Functor[F] {
   def pure[A](a: A): F[A]
   def flatMap[A, B](fa: F[A])(op: A => F[B]): F[B]

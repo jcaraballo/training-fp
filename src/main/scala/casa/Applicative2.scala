@@ -1,7 +1,5 @@
 package casa
 
-import scala.language.higherKinds
-
 // An applicative functor defined using `pure` and `apply` as primitives
 trait Applicative2[F[_]] {
   def pure[A](a: A): F[A]

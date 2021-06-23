@@ -5,8 +5,6 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Prop.{forAll, propBoolean}
 import org.scalacheck.{Arbitrary, Gen, Prop, Properties}
 
-import scala.language.higherKinds
-
 
 object ApplicativePropertyBasedSpecification extends ApplicativePropertyBasedBaseSpecification(ApplicativeProxy, "Applicative")
 

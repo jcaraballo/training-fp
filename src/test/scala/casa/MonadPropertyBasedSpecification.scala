@@ -3,8 +3,6 @@ package casa
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{Arbitrary, Prop, Properties}
 
-import scala.language.higherKinds
-
 object MonadPropertyBasedSpecification extends Properties("Monad") {
 
   property("List is a Monad, so it satisfies the monad laws") = {

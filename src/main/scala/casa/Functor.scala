@@ -1,7 +1,5 @@
 package casa
 
-import scala.language.higherKinds
-
 trait Functor[F[_]] {
   def map[A, B](fa: F[A])(op: A => B): F[B]
 }

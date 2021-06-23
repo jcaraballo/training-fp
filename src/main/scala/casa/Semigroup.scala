@@ -5,9 +5,7 @@ trait Semigroup[A] {
 }
 
 object Semigroup {
-  def apply[A](combineOperation: (A, A) => A): Semigroup[A] = (a1: A, a2: A) => combineOperation(a1, a2)
-
   object Instances {
-    implicit def nonEmptyListConcatenationSemigroup[A]: Semigroup[Nel[A]] = Semigroup(_ ::: _)
+    implicit def nonEmptyListConcatenationSemigroup[A]: Semigroup[Nel[A]] = (a1: Nel[A], a2: Nel[A]) => a1 ::: a2
   }
 }

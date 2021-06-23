@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 class SemigroupSpec extends AnyFreeSpec {
   "Semigroup" - {
     "Nel is a semigroup" - {
-      import Semigroup.Instances.{nonEmptyListConcatenationSemigroup => nelSemigroup}
+      import Semigroup.Instances.{nonEmptyListConcatenationSemigroup as nelSemigroup}
 
       "operations" in {
         nelSemigroup.combine(Nel(1, 2), Nel(3, 4)) shouldBe Nel(1, 2, 3, 4)
