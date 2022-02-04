@@ -12,7 +12,7 @@ object Applicative2PropertyBasedSpecification extends ApplicativePropertyBasedBa
 
 abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[StringValidatedNel], name: String) extends Properties(name) {
 
-  implicit def arbitraryValidated[A](implicit arbA: Arbitrary[A]): Arbitrary[ValidatedNel[String, A]] = {
+  given [A](using Arbitrary[A]): Arbitrary[ValidatedNel[String, A]] = {
     import ValidatedNel.ValidatedNelOps
     Arbitrary(Gen.oneOf(
       arbitrary[String].map(_.invalidNel[A]),
@@ -20,7 +20,7 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
     ))
   }
 
-  implicit def arbitraryValid[A](implicit arbA: Arbitrary[A]): Arbitrary[Valid[String, A]] =
+  given [A](using Arbitrary[A]): Arbitrary[Valid[String, A]] =
     Arbitrary(arbitrary[A].map(Valid.apply))
 
   property("validated nel: operations: primitives: pure") = {
@@ -49,17 +49,16 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
   }
 
 
-  protected def validatedNelApplicativeHasPure[A](implicit arbA: Arbitrary[A]): Prop =
+  protected def validatedNelApplicativeHasPure[A](using Arbitrary[A]): Prop =
     forAll { (a: A) =>
       import ValidatedNel.ValidatedNelOps
       va.pure(a) == a.validNel[String]
     }
 
-  protected def validatedNelApplicativeHasMap2[A, B, C](implicit
-                                                        arbA: Arbitrary[A],
-                                                        arbB: Arbitrary[B],
-                                                        arbC: Arbitrary[C],
-                                                        arbAandBtoC: Arbitrary[(A, B) => C]
+  protected def validatedNelApplicativeHasMap2[A, B, C](using Arbitrary[A],
+                                                              Arbitrary[B],
+                                                              Arbitrary[C],
+                                                              Arbitrary[(A, B) => C]
                                                        ): Prop = {
     import ValidatedNel.ValidatedNelOps
 
@@ -90,10 +89,7 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
       map2ReturnsInvalidCombiningBothErrorsWhenBothAreInvalid
   }
 
-  protected def validatedNelApplicativeHasMap[A, B](implicit
-                                                    arbA: Arbitrary[A],
-                                                    arbAtoB: Arbitrary[A => B]
-                                                   ): Prop = {
+  protected def validatedNelApplicativeHasMap[A, B](using Arbitrary[A], Arbitrary[A => B]): Prop = {
     import ValidatedNel.ValidatedNelOps
 
     def mapAppliesOperationWhenValid = forAll { (a: A, op: A => B) =>
@@ -108,11 +104,10 @@ abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[Str
     mapAppliesOperationWhenValid && mapReturnsInputWhenInvalid
   }
 
-  protected def validatedNelApplicativeHasTraverse[A, B](implicit
-                                                         arbListOfA: Arbitrary[List[A]],
-                                                         arbAtoB: Arbitrary[A => B],
-                                                         arbAtoValidatedNelStringB: Arbitrary[A => ValidatedNel[String, B]],
-                                                         arbAtoValidStringB: Arbitrary[A => Valid[String, B]]
+  protected def validatedNelApplicativeHasTraverse[A, B](using Arbitrary[List[A]],
+                                                               Arbitrary[A => B],
+                                                               Arbitrary[A => ValidatedNel[String, B]],
+                                                               Arbitrary[A => Valid[String, B]]
                                                         ): Prop = {
     import ValidatedNel.ValidatedNelOps
 

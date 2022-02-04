@@ -17,7 +17,7 @@ trait Applicative[F[_]]:
 
 object Applicative:
   object Instances:
-    implicit def validatedNelApplicative[I]: Applicative[({type IValidatedNel[V] = ValidatedNel[I, V]})#IValidatedNel] =
+    given validatedNelApplicative[I]: Applicative[({type IValidatedNel[V] = ValidatedNel[I, V]})#IValidatedNel] =
       new Applicative[({type IValidatedNel[V] = ValidatedNel[I, V]})#IValidatedNel]:
         override def pure[A](a: A): ValidatedNel[I, A] = Valid(a)
 

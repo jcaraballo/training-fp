@@ -5,5 +5,5 @@ trait Functor[F[_]]:
 
 object Functor:
   object Instances:
-    implicit val listFunct: Functor[List] = new Functor[List]:
+    given listFunct: Functor[List] = new Functor[List]:
       override def map[A, B](fa: List[A])(op: A => B): List[B] = fa map op

@@ -5,7 +5,7 @@ import org.scalacheck.Prop.forAll
 import casa.Semigroup.Instances.nonEmptyListConcatenationSemigroup as nelSemigroup
 
 object SemigroupPropertyBasedSpecification extends Properties("Semigroup") {
-  implicit def arbitraryNel[A](implicit arbA: Arbitrary[A], arbListA: Arbitrary[List[A]]): Arbitrary[Nel[A]] = {
+  given [A](using Arbitrary[A], Arbitrary[List[A]]): Arbitrary[Nel[A]] = {
     Arbitrary(
       for {
         head <- Arbitrary.arbitrary[A]
@@ -25,7 +25,7 @@ object SemigroupPropertyBasedSpecification extends Properties("Semigroup") {
       semigroupAssociativityLaw[Nel[Unit]]
   }
 
-  def semigroupAssociativityLaw[A](implicit semigroup: Semigroup[A], arb: Arbitrary[A]): Prop =
+  def semigroupAssociativityLaw[A](using semigroup: Semigroup[A], arb: Arbitrary[A]): Prop =
     forAll { (a1: A, a2: A, a3: A) =>
       semigroup.combine(semigroup.combine(a1, a2), a3) == semigroup.combine(a1, semigroup.combine(a2, a3))
     }

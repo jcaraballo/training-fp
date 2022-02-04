@@ -4,7 +4,7 @@ import org.scalacheck.Prop.forAll
 import org.scalacheck.{Arbitrary, Prop, Properties}
 
 object MonoidPropertyBasedSpecification extends Properties("Monoid") {
-  implicit def arbitraryNel[A](implicit arbA: Arbitrary[A], arbListA: Arbitrary[List[A]]): Arbitrary[Nel[A]] = {
+  given [A](using Arbitrary[A], Arbitrary[List[A]]): Arbitrary[Nel[A]] = {
     Arbitrary(
       for {
         head <- Arbitrary.arbitrary[A]
@@ -19,14 +19,14 @@ object MonoidPropertyBasedSpecification extends Properties("Monoid") {
     }
 
   property("The addition monoid for Int satisfies monoid laws") =
-    monoidLaws[Int](Monoid.Instances.intAdditionMonoid, implicitly[Arbitrary[Int]])
+    monoidLaws[Int](using Monoid.Instances.intAdditionMonoid, implicitly[Arbitrary[Int]])
 
-  def monoidLaws[A](implicit monoid: Monoid[A], arb: Arbitrary[A]): Prop = {
+  def monoidLaws[A](using Monoid[A], Arbitrary[A]): Prop = {
     SemigroupPropertyBasedSpecification.semigroupAssociativityLaw[A] &&
     monoidIdentityLaw[A]
   }
 
-  def monoidIdentityLaw[A](implicit monoid: Monoid[A], arb: Arbitrary[A]): Prop = {
+  def monoidIdentityLaw[A](using monoid: Monoid[A], arb: Arbitrary[A]): Prop = {
     forAll { (a: A) =>
       monoid.combine(a, monoid.empty) == a &&
       monoid.combine(monoid.empty, a) == a
