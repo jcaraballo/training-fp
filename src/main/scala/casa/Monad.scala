@@ -1,6 +1,6 @@
 package casa
 
-trait Monad[F[_]] extends Functor[F] {
+trait Monad[F[_]] extends Functor[F]:
   def pure[A](a: A): F[A]
   def flatMap[A, B](fa: F[A])(op: A => F[B]): F[B]
 
@@ -20,34 +20,23 @@ trait Monad[F[_]] extends Functor[F] {
 
   // Kleisli composition
   def compose[A, B, C](f: A => F[B], g: B => F[C]): A => F[C] = a => flatMap(f(a))(g)
-}
 
-object Monad {
 
-  object Instances {
-    implicit val listMonad: Monad[List] = new Monad[List] {
+object Monad:
+  object Instances:
+    implicit val listMonad: Monad[List] = new Monad[List]:
       override def pure[A](a: A): List[A] = List(a)
-
       override def flatMap[A, B](fa: List[A])(op: A => List[B]): List[B] = fa flatMap op
-    }
 
-    implicit val optionMonad: Monad[Option] = new Monad[Option] {
+    implicit val optionMonad: Monad[Option] = new Monad[Option]:
       override def pure[A](a: A): Option[A] = Some(a)
-
       override def flatMap[A, B](fa: Option[A])(op: A => Option[B]): Option[B] = fa flatMap op
-    }
 
     implicit def eitherMonad[L]: Monad[({type EitherLOr[B] = Either[L, B]})#EitherLOr] =
-      new Monad[({type EitherLOr[B] = Either[L, B]})#EitherLOr] {
+      new Monad[({type EitherLOr[B] = Either[L, B]})#EitherLOr]:
         override def pure[R](a: R): Either[L, R] = Right(a)
-
         override def flatMap[R1, R2](fa: Either[L, R1])(op: R1 => Either[L, R2]): Either[L, R2] = fa flatMap op
-      }
 
-    implicit def stateMonad[S]: Monad[({type SState[A] = State[S, A]})#SState] = new Monad[({type SState[A] = State[S, A]})#SState] {
+    implicit def stateMonad[S]: Monad[({type SState[A] = State[S, A]})#SState] = new Monad[({type SState[A] = State[S, A]})#SState]:
       override def pure[A](a: A): State[S, A] = State.pure[S, A](a)
-
       override def flatMap[A, B](fa: State[S, A])(op: A => State[S, B]): State[S, B] = fa flatMap op
-    }
-  }
-}

@@ -1,6 +1,6 @@
 package casa
 
-case class State[S, A](run: S => (A, S)) {
+case class State[S, A](run: S => (A, S)):
   def map[B](op: A => B): State[S, B] = State { s =>
     val (a, newS) = run(s)
     (op(a), newS)
@@ -9,9 +9,8 @@ case class State[S, A](run: S => (A, S)) {
     val (a, newS) = run(s)
     op(a).run(newS)
   }
-}
 
-object State {
+object State:
   def pure[S, A](a: A): State[S, A] = State(s => (a, s))
   def get[S]: State[S, S] = State(s => (s, s))
   def set[S](s: S): State[S, Unit] = State(_ => ((), s))
@@ -19,4 +18,3 @@ object State {
     s <- get
     _ <- set(f(s))
   } yield ()
-}
