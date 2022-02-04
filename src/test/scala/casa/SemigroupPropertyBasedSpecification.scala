@@ -2,7 +2,7 @@ package casa
 
 import org.scalacheck.{Arbitrary, Prop, Properties}
 import org.scalacheck.Prop.forAll
-import casa.Semigroup.Instances.{nonEmptyListConcatenationSemigroup => nelSemigroup}
+import casa.Semigroup.Instances.nonEmptyListConcatenationSemigroup as nelSemigroup
 
 object SemigroupPropertyBasedSpecification extends Properties("Semigroup") {
   implicit def arbitraryNel[A](implicit arbA: Arbitrary[A], arbListA: Arbitrary[List[A]]): Arbitrary[Nel[A]] = {
