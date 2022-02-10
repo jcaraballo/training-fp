@@ -34,7 +34,7 @@ object MonadPropertyBasedSpecification extends Properties("Monad") {
     import Monad.Instances.eitherMonad
 
     type StringEither[B] = Either[String, B]
-    // eitherMonad is in scope but IntelliJ gets confused because it returns type lambda
+
     monadLaws[StringEither, Int, Double, String] &&
       monadLawsWithKleisliComposition[StringEither, Int, Double, String, Boolean]
   }
