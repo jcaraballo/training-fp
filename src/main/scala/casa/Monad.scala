@@ -32,11 +32,11 @@ object Monad:
       override def pure[A](a: A): Option[A] = Some(a)
       override def flatMap[A, B](fa: Option[A])(op: A => Option[B]): Option[B] = fa flatMap op
 
-    given eitherMonad[L]: Monad[({type EitherLOr[B] = Either[L, B]})#EitherLOr] =
-      new Monad[({type EitherLOr[B] = Either[L, B]})#EitherLOr]:
+    given eitherMonad[L]: Monad[[B] =>> Either[L, B]] =
+      new Monad[[B] =>> Either[L, B]]:
         override def pure[R](a: R): Either[L, R] = Right(a)
         override def flatMap[R1, R2](fa: Either[L, R1])(op: R1 => Either[L, R2]): Either[L, R2] = fa flatMap op
 
-    given stateMonad[S]: Monad[({type SState[A] = State[S, A]})#SState] = new Monad[({type SState[A] = State[S, A]})#SState]:
+    given stateMonad[S]: Monad[[A] =>> State[S, A]] = new Monad[[A] =>> State[S, A]]:
       override def pure[A](a: A): State[S, A] = State.pure[S, A](a)
       override def flatMap[A, B](fa: State[S, A])(op: A => State[S, B]): State[S, B] = fa flatMap op

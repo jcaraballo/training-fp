@@ -17,8 +17,8 @@ trait Applicative[F[_]]:
 
 object Applicative:
   object Instances:
-    given validatedNelApplicative[I]: Applicative[({type IValidatedNel[V] = ValidatedNel[I, V]})#IValidatedNel] =
-      new Applicative[({type IValidatedNel[V] = ValidatedNel[I, V]})#IValidatedNel]:
+    given validatedNelApplicative[I]: Applicative[[V] =>> ValidatedNel[I, V]] =
+      new Applicative[[V] =>> ValidatedNel[I, V]]:
         override def pure[A](a: A): ValidatedNel[I, A] = Valid(a)
 
         override def map2[A, B, C](fa: ValidatedNel[I, A], fb: ValidatedNel[I, B])(op: (A, B) => C): ValidatedNel[I, C] = (fa, fb) match {
