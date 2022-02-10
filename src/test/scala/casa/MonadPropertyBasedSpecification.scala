@@ -33,10 +33,8 @@ object MonadPropertyBasedSpecification extends Properties("Monad") {
   property("Either is a Monad") = {
     import Monad.Instances.eitherMonad
 
-    type StringEither[B] = Either[String, B]
-
-    monadLaws[StringEither, Int, Double, String] &&
-      monadLawsWithKleisliComposition[StringEither, Int, Double, String, Boolean]
+    monadLaws[[B] =>> Either[String, B], Int, Double, String] &&
+      monadLawsWithKleisliComposition[[B] =>> Either[String, B], Int, Double, String, Boolean]
   }
 
   // Can't really verify the laws as they stand because State instances can't be compared properly (encapsulates a function)

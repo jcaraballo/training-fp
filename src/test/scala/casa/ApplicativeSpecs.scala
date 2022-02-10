@@ -2,12 +2,12 @@ package casa
 
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers.shouldBe
-import ApplicativeBaseSpec.{ApplicativeLike, StringValidatedNel}
+import ApplicativeBaseSpec.ApplicativeLike
 
 class ApplicativeSpec extends ApplicativeBaseSpec(ApplicativeProxy)
 class Applicative2Spec extends ApplicativeBaseSpec(Applicative2Proxy)
 
-abstract class ApplicativeBaseSpec(va: ApplicativeLike[StringValidatedNel]) extends AnyFreeSpec {
+abstract class ApplicativeBaseSpec(va: ApplicativeLike[[V] =>> ValidatedNel[String, V]]) extends AnyFreeSpec {
 
   "Applicative Functor" - {
     "ValidatedNel is an Applicative Functor" - {
@@ -85,17 +85,15 @@ object ApplicativeBaseSpec {
 
     def apply[A, B](fop: F[A => B])(fa: F[A]): F[B]
   }
-
-  type StringValidatedNel[V] = ValidatedNel[String, V]
 }
 
-object ApplicativeProxy extends ApplicativeLike[StringValidatedNel] {
+object ApplicativeProxy extends ApplicativeLike[[V] =>> ValidatedNel[String, V]] {
   private val underlying = Applicative.Instances.validatedNelApplicative[String]
   export underlying.*
 }
 
 
-object Applicative2Proxy extends ApplicativeLike[StringValidatedNel] {
+object Applicative2Proxy extends ApplicativeLike[[V] =>> ValidatedNel[String, V]] {
   private val underlying = Applicative2.Instances.validatedNelApplicative2[String]
   export underlying.*
 }

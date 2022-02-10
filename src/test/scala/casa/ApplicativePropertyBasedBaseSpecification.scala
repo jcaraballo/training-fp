@@ -1,6 +1,6 @@
 package casa
 
-import casa.ApplicativeBaseSpec.{ApplicativeLike, StringValidatedNel}
+import casa.ApplicativeBaseSpec.ApplicativeLike
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Prop.{forAll, propBoolean}
 import org.scalacheck.{Arbitrary, Gen, Prop, Properties}
@@ -10,7 +10,7 @@ object ApplicativePropertyBasedSpecification extends ApplicativePropertyBasedBas
 
 object Applicative2PropertyBasedSpecification extends ApplicativePropertyBasedBaseSpecification(Applicative2Proxy, "Applicative2")
 
-abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[StringValidatedNel], name: String) extends Properties(name) {
+abstract class ApplicativePropertyBasedBaseSpecification(va: ApplicativeLike[[V] =>> ValidatedNel[String, V]], name: String) extends Properties(name) {
 
   given [A](using Arbitrary[A]): Arbitrary[ValidatedNel[String, A]] = {
     import ValidatedNel.ValidatedNelOps
