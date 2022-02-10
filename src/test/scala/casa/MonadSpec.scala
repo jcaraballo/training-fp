@@ -115,6 +115,8 @@ class MonadSpec extends AnyFreeSpec {
 
       "Kleisli composition" in {
         val withoutBraces: String => Option[String] = { s =>
+          import scala.language.unsafeNulls
+
           if (s.startsWith("[") && s.endsWith("]"))
             Some(s.substring(1, s.length - 1))
           else
@@ -170,6 +172,8 @@ class MonadSpec extends AnyFreeSpec {
 
       "Kleisli composition" in {
         val withoutBraces: String => Either[String, String] = { s =>
+          import scala.language.unsafeNulls
+
           if (!s.startsWith("["))
             Left(s"'$s' doesn't start with '['")
           else if (!s.endsWith("]"))

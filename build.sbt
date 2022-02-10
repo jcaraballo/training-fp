@@ -9,3 +9,5 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.11" % "test",
   "org.scalacheck" %% "scalacheck" % "1.15.4" % "test"
 )
+
+scalacOptions += "-Yexplicit-nulls"
