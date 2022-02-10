@@ -90,61 +90,12 @@ object ApplicativeBaseSpec {
 }
 
 object ApplicativeProxy extends ApplicativeLike[StringValidatedNel] {
-
   private val underlying = Applicative.Instances.validatedNelApplicative[String]
-
-  override def pure[A](a: A): ValidatedNel[String, A] =
-    underlying.pure   (a   )
-
-  override def map2[A, B, C](fa: ValidatedNel[String, A], fb: ValidatedNel[String, B])(op: (A, B) => C): ValidatedNel[String, C] =
-    underlying.map2         (fa                         , fb                         )(op             )
-
-  override def map[A, B](fa: ValidatedNel[String, A])(op: A => B): ValidatedNel[String, B] =
-    underlying.map      (fa                         )(op        )
-
-  override def traverse[A, B](as: List[A])(op: A => ValidatedNel[String, B]): ValidatedNel[String, List[B]] =
-    underlying.traverse      (as         )(op                              )
-
-  override def sequence[A](fas: List[ValidatedNel[String, A]]): ValidatedNel[String, List[A]] =
-    underlying.sequence   (fas                               )
-
-  override def replicateM[A](n: Int, fa: ValidatedNel[String, A]): ValidatedNel[String, List[A]] =
-    underlying.replicateM   (n     , fa                         )
-
-  override def product[A, B](fa: ValidatedNel[String, A], fb: ValidatedNel[String, B]): ValidatedNel[String, (A, B)] =
-    underlying.product      (fa                         , fb                         )
-
-  override def apply[A, B](fop: ValidatedNel[String, A => B])(fa: ValidatedNel[String, A]): ValidatedNel[String, B] =
-    underlying.apply      (fop                              )(fa                         )
+  export underlying.*
 }
 
 
-
 object Applicative2Proxy extends ApplicativeLike[StringValidatedNel] {
-
   private val underlying = Applicative2.Instances.validatedNelApplicative2[String]
-
-  override def pure[A](a: A): ValidatedNel[String, A] =
-    underlying.pure   (a   )
-
-  override def map2[A, B, C](fa: ValidatedNel[String, A], fb: ValidatedNel[String, B])(op: (A, B) => C): ValidatedNel[String, C] =
-    underlying.map2         (fa                         , fb                         )(op             )
-
-  override def map[A, B](fa: ValidatedNel[String, A])(op: A => B): ValidatedNel[String, B] =
-    underlying.map      (fa                         )(op        )
-
-  override def traverse[A, B](as: List[A])(op: A => ValidatedNel[String, B]): ValidatedNel[String, List[B]] =
-    underlying.traverse      (as         )(op                              )
-
-  override def sequence[A](fas: List[ValidatedNel[String, A]]): ValidatedNel[String, List[A]] =
-    underlying.sequence   (fas                               )
-
-  override def replicateM[A](n: Int, fa: ValidatedNel[String, A]): ValidatedNel[String, List[A]] =
-    underlying.replicateM   (n     , fa                         )
-
-  override def product[A, B](fa: ValidatedNel[String, A], fb: ValidatedNel[String, B]): ValidatedNel[String, (A, B)] =
-    underlying.product      (fa                         , fb                         )
-
-  override def apply[A, B](fop: ValidatedNel[String, A => B])(fa: ValidatedNel[String, A]): ValidatedNel[String, B] =
-    underlying.apply      (fop                              )(fa                         )
+  export underlying.*
 }
