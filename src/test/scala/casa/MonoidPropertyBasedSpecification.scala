@@ -4,15 +4,6 @@ import org.scalacheck.Prop.forAll
 import org.scalacheck.{Arbitrary, Prop, Properties}
 
 object MonoidPropertyBasedSpecification extends Properties("Monoid") {
-  given [A](using Arbitrary[A], Arbitrary[List[A]]): Arbitrary[Nel[A]] = {
-    Arbitrary(
-      for {
-        head <- Arbitrary.arbitrary[A]
-        tail <- Arbitrary.arbitrary[List[A]]
-      } yield Nel(head, tail)
-    )
-  }
-
   property("There is a monoid for Int where combine is addition and empty is 0") =
     forAll { (int1: Int, int2: Int) =>
       Monoid.Instances.intAdditionMonoid.combine(int1, int2) == int1 + int2
