@@ -1,11 +1,11 @@
 package casa
 
 case class State[S, A](run: S => (A, S)):
-  def map[B](op: A => B): State[S, B] = State { s =>
+  infix def map[B](op: A => B): State[S, B] = State { s =>
     val (a, newS) = run(s)
     (op(a), newS)
   }
-  def flatMap[B](op: A => State[S, B]): State[S, B] = State { s =>
+  infix def flatMap[B](op: A => State[S, B]): State[S, B] = State { s =>
     val (a, newS) = run(s)
     op(a).run(newS)
   }

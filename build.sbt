@@ -2,7 +2,7 @@ name := "training-fp"
 
 version := "0.1"
 
-scalaVersion := "3.3.1"
+scalaVersion := "3.7.3"
 
 
 libraryDependencies ++= Seq(
@@ -10,4 +10,4 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.17.0" % "test"
 )
 
-scalacOptions ++= Seq("-Yexplicit-nulls", "-Ysafe-init")
+scalacOptions ++= Seq("-Yexplicit-nulls", "-Wsafe-init")
