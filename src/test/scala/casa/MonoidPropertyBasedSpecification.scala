@@ -13,8 +13,8 @@ object MonoidPropertyBasedSpecification extends Properties("Monoid") {
     monoidLaws[Int](using Monoid.Instances.intAdditionMonoid, implicitly[Arbitrary[Int]])
 
   def monoidLaws[A](using Monoid[A], Arbitrary[A]): Prop = {
-    SemigroupPropertyBasedSpecification.semigroupAssociativityLaw[A] &&
-    monoidIdentityLaw[A]
+    SemigroupPropertyBasedSpecification.semigroupAssociativityLaw[A] :| "Monoid satisfies associativity law" &&
+    monoidIdentityLaw[A] :| "Monoid satisfies identity law"
   }
 
   def monoidIdentityLaw[A](using monoid: Monoid[A], arb: Arbitrary[A]): Prop = {
