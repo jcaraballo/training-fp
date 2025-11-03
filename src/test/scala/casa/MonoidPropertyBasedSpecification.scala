@@ -12,6 +12,11 @@ object MonoidPropertyBasedSpecification extends Properties("Monoid") {
   property("The addition monoid for Int satisfies monoid laws") =
     monoidLaws[Int](using Monoid.Instances.intAdditionMonoid, implicitly[Arbitrary[Int]])
 
+  property("The concatenation monoid for List satisfies monoid laws") =
+    monoidLaws[List[Int]](using Monoid.Instances.listConcatenationMonoid, implicitly[Arbitrary[List[Int]]]) &&
+      monoidLaws[List[String]](using Monoid.Instances.listConcatenationMonoid, implicitly[Arbitrary[List[String]]]) &&
+      monoidLaws[List[Unit]](using Monoid.Instances.listConcatenationMonoid, implicitly[Arbitrary[List[Unit]]])
+
   def monoidLaws[A](using Monoid[A], Arbitrary[A]): Prop = {
     SemigroupPropertyBasedSpecification.semigroupAssociativityLaw[A] :| "Monoid satisfies associativity law" &&
     monoidIdentityLaw[A] :| "Monoid satisfies identity law"
